@@ -4,7 +4,8 @@
 \alias{gg_coefsplot}
 \title{Caterpillar plots of regression coefficients from a boral model}
 \usage{
-gg_coefsplot(model, X.labels = NULL)
+gg_coefsplot(model, X.labels = NULL, linesize = 1.5, pointsize = 3,
+  palette = "Greys")
 }
 \arguments{
 \item{model}{A boral model fitted with one or more latent variables.}
@@ -14,7 +15,50 @@ for the X variables (graph facet labels).
 If a named vector is provided (safest), the names will
 be used to match labels to the X variable names in the fitted model.
 If \code{NULL} (default), X variable names are taken from the model.}
+
+\item{linesize}{Thickness of the line segments drawn for intervals (passed
+to ggplot as the \code{size} argument for \code{\link[ggplot2]{geom_segment}}).}
+
+\item{pointsize}{Size of points representing median values (passed to
+ggplot as the \code{size} argument for \code{\link[ggplot2]{geom_point}}).
+Set to zero if you do not want to display points.}
+
+\item{palette}{The name of the colour palette to use when indicating where
+intervals lie in relation to zero. This should be one of the sequential
+palettes recognized by \code{\link[ggplot2]{scale_colour_distiller}}.
+The default is "Greys". Set to \code{NULL} or \code{""} to turn off
+colouring and draw black lines for all intervals.}
 }
 \description{
-Caterpillar plots of regression coefficients from a boral model
+Constructs horizontal line plot showing 95% highest posterior density
+intervals, otherwise known as a caterpillar plot, for the column-specific
+regression coefficients corresponding to the covariates in X fitted
+in the boral model. Median coefficient values are shown as a point on
+each interval.
+}
+\examples{
+# This example is based on that for the coefsplot function
+# in the boral package and requires an example dataset from the
+# mvabund package.
+library(boral)
+library(ggboral)
+
+data(spider, package = "mvabund")
+y <- spider$abun
+X <- scale( spider$x )
+
+# Warning - these settings are only to make the example run quickly.
+# Don't use them for a real analysis!
+example.control <- list(n.burnin = 10, n.iteration = 100, n.thin = 1)
+
+spiderfit_nb <- boral(y, X = X,
+                      family = "negative.binomial",
+                      num.lv = 2,
+                      mcmc.control = example.control)
+
+gg_coefsplot(spiderfit_nb)
+
+# Display plot again with a white background
+last_plot() + theme_bw()
+
 }

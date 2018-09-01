@@ -26,3 +26,36 @@ and their corresponding coefficients (species or attributes).
 \note{
 Presently this function only graphs two latent variables.
 }
+\examples{
+# This example is based on that for the lvsplot function
+# in the boral package and requires an example dataset from the
+# mvabund package.
+library(boral)
+library(ggboral)
+
+data(spider, package = "mvabund")
+y <- spider$abun
+
+# Warning - these settings are only to make the example run quickly.
+# Don't use them for a real analysis!
+example.control <- list(n.burnin = 10, n.iteration = 100, n.thin = 1)
+
+spiderfit_nb <- boral(y, family = "negative.binomial",
+                      num.lv = 2,
+                      row.eff = "fixed",
+                      mcmc.control = example.control)
+
+gg_lvsplot(spiderfit_nb)
+
+# Since the function returns a ggplot object you can tweak it further.
+# Here we add labels and a white background.
+last_plot() +
+  labs(x = "Latent variable 1", y = "Latent variable 2",
+       title = "Example unconstrained model of spider abundance") +
+
+  theme_bw()
+
+}
+\seealso{
+\code{\link{gg_lvsplot_data}}
+}

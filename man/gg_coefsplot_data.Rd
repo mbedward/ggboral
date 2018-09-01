@@ -10,8 +10,51 @@ gg_coefsplot_data(model)
 \item{model}{A boral model fitted with one or more latent variables.}
 }
 \value{
-A data frame for use with ggplot.
+A data frame to use with ggplot that has the following columns:
+  \describe{
+    \item{label}{y variable labels (e.g. species names)}
+    \item{var}{X (explanatory) variable names}
+    \item{lower95}{lower bound of the 95% highest posterior density interval
+      for coefficient value}
+    \item{upper95}{upper bound of the 95% highest posterior density interval
+      for coefficient value}
+    \item{median}{median coefficent value}
+    \item{revlabel}{Factor variable based on label with levels in reverse order
+      so that graphs will show, for example, species names in A-Z order from
+      top to bottom.}
+  }
+
+\dontrun{
+dat.gg <- gg_coefsplot_data(mymodel)
+
+# Draw 'manually' with ggplot as an alternative to using
+# the gg_coefsplot function. First we add a variable
+# for how central zero is in the intervals which we will
+# use to colour the intervals.
+#
+library(dplyr)
+
+dat.gg <- dat.gg %>%
+  mutate(zeroness = ifelse(lower95 > 0 | upper95 < 0, 0,
+                           min(abs(lo), hi) / max(abs(lo), hi)))
+
+ggplot(data = dat.gg, aes(y = revlabel)) +
+  geom_segment(aes(yend = revlabel, x = lower95, y = upper95,
+                   colour = zeroness)) +
+
+  scale_colour_grey(start = 1.0, end = 0.2) +
+
+  geom_point(aes(x = median)) +
+  geom_vline(xintercept = 0, linetype = "dashed")
+  facet_wrap(~ var)
+}
 }
 \description{
-Prepare data for caterpillar plots of boral regression coefficients
+This function takes a fitted boral model and returns a data frame to use
+with ggplot to draw 'caterpillar plots' of regression coefficients.
+It is used by function \code{\link{gg_coefsplot}} but you can also use it
+directly.
+}
+\seealso{
+\code{\link{gg_lvsplot}}
 }
