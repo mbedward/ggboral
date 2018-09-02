@@ -186,7 +186,7 @@ gg_coefsplot <- function(model, X.labels = NULL,
     geom_point(aes(x = median, colour = linecolour),
                size = pointsize)
 
-  if (!is.null(palette) || palette == "") {
+  if (!is.null(palette) && palette != "") {
     gg <- gg + scale_color_distiller(palette = palette, direction = 1)
   } else {
     gg <- gg + scale_colour_gradient(low = "black", high = "black")
