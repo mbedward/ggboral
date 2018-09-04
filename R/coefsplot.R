@@ -140,6 +140,17 @@ gg_coefsplot_data <- function(model) {
 #' # Display plot again with a white background
 #' last_plot() + theme_bw()
 #'
+#' # Re-do plot using a different palette for the intervals
+#' # (see help page for ggplot2::scale_colour_distiller for the
+#' # available palette names)
+#' #
+#' gg_coefsplot(spiderfit_nb, palette = "Blues") +
+#'   theme_bw()
+#'
+#' # One more time, with plain intervals
+#' gg_coefsplot(spiderfit_nb, palette = "") +
+#'   theme_bw()
+#'
 #' @export
 #'
 gg_coefsplot <- function(model, X.labels = NULL,
@@ -181,23 +192,23 @@ gg_coefsplot <- function(model, X.labels = NULL,
     geom_segment(aes(yend = revlabel,
                      x = lower95, xend = upper95,
                      colour = linecolour),
-                 size = linesize) +
+                 size = linesize,
+                 show.legend = FALSE) +
 
     geom_point(aes(x = median, colour = linecolour),
-               size = pointsize)
+               size = pointsize,
+               show.legend = FALSE)
 
-  if (!is.null(palette) && palette != "") {
-    gg <- gg + scale_color_distiller(palette = palette, direction = 1)
-  } else {
+  if (is.null(palette) || palette == "") {
     gg <- gg + scale_colour_gradient(low = "black", high = "black")
+  } else {
+    gg <- gg + scale_color_distiller(palette = palette, direction = 1)
   }
 
   gg + geom_vline(xintercept = 0, linetype = "dashed") +
 
     labs(x = "", y = "") +
 
-    facet_wrap(~ var, scales = "free_x", labeller = labeller) +
-
-    theme(legend.position = "none")
+    facet_wrap(~ var, scales = "free_x", labeller = labeller)
 }
 
