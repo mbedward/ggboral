@@ -118,11 +118,12 @@ gg_varpart <- function(model) {
 
   ggplot(data = dat) +
     geom_bar(aes(x = label, y = value, fill = varpart),
-             stat = "identity") +
+             stat = "identity", width = 0.5, alpha = 0.6) +
 
-    scale_fill_discrete(name = "Variance component",
-                        breaks = c("X", "row", "lv"),
-                        labels = c("Predictors", "Row effects", "Latent variables")) +
+    scale_fill_viridis_d(name = "Variance component",
+                         breaks = c("X", "row", "lv"),
+                         labels = c("Predictors", "Row effects", "Latent variables"),
+                         begin = 0, end = 0.8, direction = -1) +
 
     labs(x = "", y = "Proportion of variance") +
 
