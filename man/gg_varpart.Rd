@@ -13,7 +13,17 @@ gg_varpart(model)
 A ggplot object.
 }
 \description{
-Plot variance components as estimated by calc.varpart
+Plots estimates of the proportion of variance in each response accounted for
+by explanatory variables, latent variables and any row effects, as estimated
+by the boral function \code{calc.varpart}.
+}
+\details{
+Proceed with caution! Read the caveats and warnings detailed in the help page
+for \code{calc.varpart} when interpreting the plot drawn by this function.
+Also keep in mind that the results can be influenced by data artefacts, e.g.
+when modelling species occurrence data with a binomial model, the estimate
+of variance explained by predictor variables will tend to be higher for species
+with few presences than for more common species.
 }
 \examples{
 #' library(boral)
