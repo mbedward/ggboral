@@ -61,4 +61,15 @@ gg_coefsplot(spiderfit_nb)
 # Display plot again with a white background
 last_plot() + theme_bw()
 
+# Re-do plot using a different palette for the intervals
+# (see help page for ggplot2::scale_colour_distiller for the
+# available palette names)
+#
+gg_coefsplot(spiderfit_nb, palette = "Blues") +
+  theme_bw()
+
+# One more time, with plain intervals
+gg_coefsplot(spiderfit_nb, palette = "") +
+  theme_bw()
+
 }
