@@ -18,3 +18,10 @@ variables is specified via the \code{lv.control} list argument to the
 \code{boral} function. Prior to this it was specified using the \code{num.lv}
 argument. This function detects which has been used.
 }
+\details{
+This function is not strictly necessary, at least not with boral version 1.7.
+Although the \code{boral} function ignores the \code{num.lv} argument when
+called, it sets the \code{num.lv} element in the returned model object to
+have the same value as \code{lv.control$num.lv}. But it seemed like a good
+idea to have this helper function in case that ever changes in the future.
+}
