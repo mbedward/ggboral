@@ -4,7 +4,8 @@
 \alias{gg_lvsplot}
 \title{Plot the latent variables from a boral model}
 \usage{
-gg_lvsplot(model, scaling = 1, lvs = c(1, 2))
+gg_lvsplot(model, scaling = 1, lvs = c(1, 2), include = c("both",
+  "objects", "attributes"))
 }
 \arguments{
 \item{model}{A boral model fitted with one or more latent variables.}
@@ -14,6 +15,10 @@ relative scaling of latent variables (e.g. sites) and latent variable
 coefficients (e.g. species).}
 
 \item{lvs}{Integer indices of the latent variables to plot.}
+
+\item{include}{One of the following: \code{'both'} (default) to display both
+objects and attributes; \code{'objects'} to display objects only; or
+\code{'attributes'} to display attributes only.}
 }
 \value{
 A ggplot object for the latent variable graph.
@@ -41,7 +46,7 @@ y <- spider$abun
 example.control <- list(n.burnin = 10, n.iteration = 100, n.thin = 1)
 
 spiderfit_nb <- boral(y, family = "negative.binomial",
-                      num.lv = 2,
+                      lv.control = list(num.lv = 2),
                       row.eff = "fixed",
                       mcmc.control = example.control)
 
@@ -52,6 +57,14 @@ gg_lvsplot(spiderfit_nb)
 last_plot() +
   labs(x = "Latent variable 1", y = "Latent variable 2",
        title = "Example unconstrained model of spider abundance") +
+
+  theme_bw()
+
+# Only display sites (objects) and not species (attributes)
+#
+gg_lvsplot(spiderfit_nb, include = "obj") +
+  labs(x = "Latent variable 1", y = "Latent variable 2",
+       title = "Site relationships from unconstrained model") +
 
   theme_bw()
 

@@ -41,7 +41,7 @@ example.control <- list(n.burnin = 10, n.iteration = 100, n.thin = 1)
 #
 spiderfit_nb <- boral(y, X,
                       family = "negative.binomial",
-                      num.lv = 2,
+                      lv.control = list(num.lv = 2),
                       row.eff = "fixed",
                       mcmc.control = example.control,
                       save.model = TRUE)

@@ -132,7 +132,7 @@ gg_coefsplot_data <- function(model) {
 #'
 #' spiderfit_nb <- boral(y, X = X,
 #'                       family = "negative.binomial",
-#'                       num.lv = 2,
+#'                       lv.control = list(num.lv = 2),
 #'                       mcmc.control = example.control)
 #'
 #' gg_coefsplot(spiderfit_nb)

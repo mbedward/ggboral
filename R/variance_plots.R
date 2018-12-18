@@ -38,7 +38,7 @@
 #' #
 #' spiderfit_nb <- boral(y, X,
 #'                       family = "negative.binomial",
-#'                       num.lv = 2,
+#'                       lv.control = list(num.lv = 2),
 #'                       row.eff = "fixed",
 #'                       mcmc.control = example.control,
 #'                       save.model = TRUE)
@@ -104,7 +104,7 @@ gg_varpart_data <- function(model) {
 #' #
 #' spiderfit_nb <- boral(y, X,
 #'                       family = "negative.binomial",
-#'                       num.lv = 2,
+#'                       lv.control = list(num.lv = 2),
 #'                       row.eff = "fixed",
 #'                       mcmc.control = example.control,
 #'                       save.model = TRUE)

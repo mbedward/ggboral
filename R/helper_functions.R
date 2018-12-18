@@ -23,3 +23,28 @@ nonzeroness <- function(lowers, uppers) {
              0.0,
              pmin(abs(lowers), uppers) / pmax(abs(lowers), uppers))
 }
+
+
+#' Gets the number of latent variables from a boral model object
+#'
+#' Starting with version 1.7 of the boral package, the number of latent
+#' variables is specified via the \code{lv.control} list argument to the
+#' \code{boral} function. Prior to this it was specified using the \code{num.lv}
+#' argument. This function detects which has been used.
+#'
+#' @param model A fitted \code{boral} object.
+#' @return Number of latent variables.
+#'
+#' @export
+#'
+get_num_lvs <- function(model) {
+  if (!inherits(model, "boral")) stop("model argument must be a boral object")
+
+  if ("lv.control" %in% names(model)) {
+    # Version >= 1.7
+    model$lv.control$num.lv
+  } else {
+    # Version <= 1.6
+    model$num.lv
+  }
+}

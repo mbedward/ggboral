@@ -38,7 +38,7 @@
 #'
 gg_lvsplot_data <- function (model, scaling = 1.0) {
 
-  Nlv <- model$num.lv
+  Nlv <- get_num_lvs(model)
   if (Nlv == 0) stop("No latent variables in the fitted model")
 
   scaling <- scaling[1]
@@ -110,6 +110,10 @@ gg_lvsplot_data <- function (model, scaling = 1.0) {
 #'
 #' @param lvs Integer indices of the latent variables to plot.
 #'
+#' @param include One of the following: \code{'both'} (default) to display both
+#'   objects and attributes; \code{'objects'} to display objects only; or
+#'   \code{'attributes'} to display attributes only.
+#'
 #' @return A ggplot object for the latent variable graph.
 #'
 #' @note Presently this function only graphs two latent variables.
@@ -133,7 +137,7 @@ gg_lvsplot_data <- function (model, scaling = 1.0) {
 #' example.control <- list(n.burnin = 10, n.iteration = 100, n.thin = 1)
 #'
 #' spiderfit_nb <- boral(y, family = "negative.binomial",
-#'                       num.lv = 2,
+#'                       lv.control = list(num.lv = 2),
 #'                       row.eff = "fixed",
 #'                       mcmc.control = example.control)
 #'
@@ -147,19 +151,43 @@ gg_lvsplot_data <- function (model, scaling = 1.0) {
 #'
 #'   theme_bw()
 #'
+#' # Only display sites (objects) and not species (attributes)
+#' #
+#' gg_lvsplot(spiderfit_nb, include = "obj") +
+#'   labs(x = "Latent variable 1", y = "Latent variable 2",
+#'        title = "Site relationships from unconstrained model") +
+#'
+#'   theme_bw()
+#'
 #' @export
 #'
-gg_lvsplot <- function(model, scaling = 1.0, lvs = c(1,2)) {
-  if (length(lvs) != 2 | model$num.lv < 2)
+gg_lvsplot <- function(model, scaling = 1.0, lvs = c(1,2),
+                       include = c("both", "objects", "attributes")) {
+
+  if (length(lvs) != 2 | get_num_lvs(model) < 2)
     stop("Presently this function only works for two latent variables")
+
+  include <- match.arg(include)
 
   lv.names <- paste0("lv", lvs)
 
   dat <- gg_lvsplot_data(model, scaling)
+
   dat <- dat[, c(lv.names, "var", "label")]
 
-  ggplot(data = dat, aes_string(x = lv.names[1], y = lv.names[2])) +
-    geom_point(aes(colour = var), show.legend = FALSE) +
-    geom_text_repel(aes(colour = var, label = label), show.legend = FALSE)
+  if (include == "both") {
+    ggplot(data = dat,
+           aes_string(x = lv.names[1], y = lv.names[2])) +
+      geom_point(aes(colour = var), show.legend = FALSE) +
+      geom_text_repel(aes(colour = var, label = label), show.legend = FALSE)
+
+  } else {
+    var <- ifelse(include == "objects", "lv", "lvcoef")
+
+    ggplot(data = dat[ dat$var == var, ],
+           aes_string(x = lv.names[1], y = lv.names[2])) +
+      geom_point() +
+      geom_text_repel(aes(label = label))
+  }
 }
 
