@@ -155,7 +155,7 @@ gg_coefsplot_data <- function(model) {
 #' # (the palette argument must be set to NULL otherwise
 #' # it overrides the single.colour argument)
 #' #
-#' gg_coefsplot(spiderfit_nb, palette = NULL, single.colour = "#0297d7") +
+#' gg_coefsplot(spiderfit_nb, palette = NULL, single.colour = "darkred") +
 #'   theme_bw()
 #'
 #' @export
