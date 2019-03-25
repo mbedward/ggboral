@@ -107,11 +107,15 @@ gg_coefsplot_data <- function(model) {
 #'   ggplot as the \code{size} argument for \code{\link[ggplot2]{geom_point}}).
 #'   Set to zero if you do not want to display points.
 #'
-#' @param palette The name of the colour palette to use when indicating where
-#'   intervals lie in relation to zero. This should be one of the sequential
-#'   palettes recognized by \code{\link[ggplot2]{scale_colour_distiller}}.
-#'   The default is "Greys". Set to \code{NULL} or \code{""} to turn off
-#'   colouring and draw black lines for all intervals.
+#' @param palette The name of the colour palette to use when colouring intervals
+#'   to indicating where intervals lie in relation to zero. This should be one
+#'   of the sequential palettes recognized by \code{\link[ggplot2]{scale_colour_distiller}}.
+#'   The default is "Greys". If set to \code{NULL} or \code{""} (empty string),
+#'   all intervals will be drawn in the same colour, as specified by \code{single.colour}.
+#'
+#' @param single.colour The name or hex code of a single colour to use for all
+#'   intervals. This argument only applies if \code{palette} is set to
+#'   \code{NULL} or \code{""}. The default single colour is black.
 #'
 #' @importFrom dplyr %>% mutate
 #'
@@ -147,15 +151,19 @@ gg_coefsplot_data <- function(model) {
 #' gg_coefsplot(spiderfit_nb, palette = "Blues") +
 #'   theme_bw()
 #'
-#' # One more time, with plain intervals
-#' gg_coefsplot(spiderfit_nb, palette = "") +
+#' # Draw all intervals with a single colour
+#' # (the palette argument must be set to NULL otherwise
+#' # it overrides the single.colour argument)
+#' #
+#' gg_coefsplot(spiderfit_nb, palette = NULL, single.colour = "#0297d7") +
 #'   theme_bw()
 #'
 #' @export
 #'
 gg_coefsplot <- function(model, X.labels = NULL,
                          linesize = 1.5, pointsize = 3,
-                         palette = "Greys") {
+                         palette = "Greys",
+                         single.colour = "black") {
 
   dat <- gg_coefsplot_data(model)
 
@@ -200,7 +208,11 @@ gg_coefsplot <- function(model, X.labels = NULL,
                show.legend = FALSE)
 
   if (is.null(palette) || palette == "") {
-    gg <- gg + scale_colour_gradient(low = "black", high = "black")
+    if (is.null(single.colour) || single.colour == "") {
+      single.colour <- "black"
+    }
+    gg <- gg + scale_colour_gradient(low = single.colour, high = single.colour)
+
   } else {
     gg <- gg + scale_color_distiller(palette = palette, direction = 1)
   }

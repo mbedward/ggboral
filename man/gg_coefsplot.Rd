@@ -5,7 +5,7 @@
 \title{Caterpillar plots of regression coefficients from a boral model}
 \usage{
 gg_coefsplot(model, X.labels = NULL, linesize = 1.5, pointsize = 3,
-  palette = "Greys")
+  palette = "Greys", single.colour = "black")
 }
 \arguments{
 \item{model}{A boral model fitted with one or more latent variables.}
@@ -23,11 +23,15 @@ to ggplot as the \code{size} argument for \code{\link[ggplot2]{geom_segment}}).}
 ggplot as the \code{size} argument for \code{\link[ggplot2]{geom_point}}).
 Set to zero if you do not want to display points.}
 
-\item{palette}{The name of the colour palette to use when indicating where
-intervals lie in relation to zero. This should be one of the sequential
-palettes recognized by \code{\link[ggplot2]{scale_colour_distiller}}.
-The default is "Greys". Set to \code{NULL} or \code{""} to turn off
-colouring and draw black lines for all intervals.}
+\item{palette}{The name of the colour palette to use when colouring intervals
+to indicating where intervals lie in relation to zero. This should be one
+of the sequential palettes recognized by \code{\link[ggplot2]{scale_colour_distiller}}.
+The default is "Greys". If set to \code{NULL} or \code{""} (empty string),
+all intervals will be drawn in the same colour, as specified by \code{single.colour}.}
+
+\item{single.colour}{The name or hex code of a single colour to use for all
+intervals. This argument only applies if \code{palette} is set to
+\code{NULL} or \code{""}. The default single colour is black.}
 }
 \description{
 Constructs horizontal line plot showing 95% highest posterior density
@@ -68,8 +72,11 @@ last_plot() + theme_bw()
 gg_coefsplot(spiderfit_nb, palette = "Blues") +
   theme_bw()
 
-# One more time, with plain intervals
-gg_coefsplot(spiderfit_nb, palette = "") +
+# Draw all intervals with a single colour
+# (the palette argument must be set to NULL otherwise
+# it overrides the single.colour argument)
+#
+gg_coefsplot(spiderfit_nb, palette = NULL, single.colour = "#0297d7") +
   theme_bw()
 
 }

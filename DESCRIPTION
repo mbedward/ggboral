@@ -1,7 +1,7 @@
 Package: ggboral
 Title: View BORAL model results with ggplot
-Version: 0.1.5
-Date: 2018-12-18
+Version: 0.1.6
+Date: 2019-03-25
 Authors@R: person("Michael", "Bedward", email = "michael.bedward@gmail.com", role = c("aut", "cre"))
 Description: Provides ggplot alternatives to the graph functions in the boral package.
 Depends: R (>= 3.5.0),
