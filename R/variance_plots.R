@@ -144,7 +144,7 @@ gg_varpart <- function(model, as.percent = FALSE, label.means = FALSE) {
       dplyr::summarize(mu = mean(value, na.rm = TRUE))
 
     Labels <- Labels %>%
-      left_join(dat.mu, by = "varpart") %>%
+      dplyr::left_join(dat.mu, by = "varpart") %>%
       dplyr::mutate(label = paste(label, fn_fmt(mu)))
   }
 
