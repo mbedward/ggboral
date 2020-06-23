@@ -46,7 +46,7 @@
 #' dat.varpart <- gg_varpart_data(spiderfit_nb)
 #' head(dat.varpart)
 #'
-#' @importFrom dplyr %>% bind_rows mutate rename
+#' @importFrom dplyr %>%
 #' @export
 #'
 gg_varpart_data <- function(model) {
@@ -58,14 +58,14 @@ gg_varpart_data <- function(model) {
   dat <- do.call(cbind, v) %>%
     as.data.frame() %>%
 
-    mutate(label = colnames(model$y)) %>%
+    dplyr::mutate(label = colnames(model$y)) %>%
 
     # re-order responses by X var part
-    mutate(label = factor(label, levels = label[order(varpart.X)])) %>%
+    dplyr::mutate(label = factor(label, levels = label[order(varpart.X)])) %>%
 
     # re-shape for plotting
     tidyr::gather(varpart, value, -label) %>%
-    mutate(varpart = stringr::str_replace(varpart, "^varpart\\.", ""))
+    dplyr::mutate(varpart = stringr::str_replace(varpart, "^varpart\\.", ""))
 }
 
 
@@ -84,12 +84,18 @@ gg_varpart_data <- function(model) {
 #'
 #' @param model A boral model fitted with one or more latent variables.
 #'
+#' @param as.percent If \code{TRUE}, format variance axis tick marks and label
+#'   as percentages. If \code{FALSE} (default), format as proportions.
+#'
+#' @param label.means If \code{TRUE}, append the mean value for each variance
+#'   component to the legend label. Default is \code{FALSE}.
+#'
 #' @return A ggplot object.
 #'
 #' @seealso \code{\link[boral]{calc.varpart}}  \code{\link{gg_varpart_data}}
 #'
 #' @examples
-#' #' library(boral)
+#' library(boral)
 #' library(ggboral)
 #'
 #' data(spider, package = "mvabund")
@@ -109,25 +115,56 @@ gg_varpart_data <- function(model) {
 #'                       mcmc.control = example.control,
 #'                       save.model = TRUE)
 #'
-#' gg_varpart(spiderfit_nb) + theme_bw()
+#' gg_varpart(spiderfit_nb,
+#'            as.percent = TRUE,
+#'            label.means = TRUE) + theme_bw()
+#'
+#' @importFrom dplyr %>%
 #'
 #' @export
 #'
-gg_varpart <- function(model) {
+gg_varpart <- function(model, as.percent = FALSE, label.means = FALSE) {
   dat <- gg_varpart_data(model)
+  if (as.percent) dat$value <- dat$value * 100
 
-  ggplot(data = dat) +
+  Labels <- data.frame(
+    varpart = c("X", "row", "lv"),
+    label = c("Predictors", "Row effects", "Latent variables"),
+    stringsAsFactors = FALSE)
+
+
+  if (label.means) {
+    if (as.percent)
+      fn_fmt <- function(x) sprintf("(%.0f%%)", x)
+    else
+      fn_fmt <- function(x) sprintf("(%0.2f)", x)
+
+    dat.mu <- dat %>%
+      dplyr::group_by(varpart) %>%
+      dplyr::summarize(mu = mean(value, na.rm = TRUE))
+
+    Labels <- Labels %>%
+      left_join(dat.mu, by = "varpart") %>%
+      dplyr::mutate(label = paste(label, fn_fmt(mu)))
+  }
+
+
+  gg <- ggplot(data = dat) +
     geom_bar(aes(x = label, y = value, fill = varpart),
              stat = "identity", width = 0.5, alpha = 0.6) +
 
     scale_fill_viridis_d(name = "Variance component",
-                         breaks = c("X", "row", "lv"),
-                         labels = c("Predictors", "Row effects", "Latent variables"),
-                         begin = 0, end = 0.8, direction = -1) +
+                         breaks = Labels$varpart,
+                         labels = Labels$label,
+                         begin = 0, end = 0.8, direction = -1)
 
-    labs(x = "", y = "Proportion of variance") +
+  if (as.percent)
+    gg <- gg + labs(x = "", y = "Percentage of variance")
+  else
+    gg <- gg + labs(x = "", y = "Proportion of variance")
 
+  gg +
     coord_flip() +
-
     theme(legend.position = "right")
+
 }

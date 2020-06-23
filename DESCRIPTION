@@ -1,13 +1,13 @@
 Package: ggboral
 Title: View BORAL model results with ggplot
-Version: 0.1.6
-Date: 2019-03-25
+Version: 0.1.7
+Date: 2020-06-23
 Authors@R: person("Michael", "Bedward", email = "michael.bedward@gmail.com", role = c("aut", "cre"))
 Description: Provides ggplot alternatives to the graph functions in the boral package.
 Depends: R (>= 3.5.0),
   ggplot2 (>= 3.0.0)
 Imports: boral (>= 1.7.0),
-  dplyr (>= 0.7.6),
+  dplyr (>= 0.8.0),
   ggrepel (>= 0.8.0),
   tidyr (>= 0.8.1)
 Suggests: mvabund (>= 3.8.4),
@@ -16,5 +16,5 @@ Suggests: mvabund (>= 3.8.4),
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr

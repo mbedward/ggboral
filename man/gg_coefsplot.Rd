@@ -4,8 +4,14 @@
 \alias{gg_coefsplot}
 \title{Caterpillar plots of regression coefficients from a boral model}
 \usage{
-gg_coefsplot(model, X.labels = NULL, linesize = 1.5, pointsize = 3,
-  palette = "Greys", single.colour = "black")
+gg_coefsplot(
+  model,
+  X.labels = NULL,
+  linesize = 1.5,
+  pointsize = 3,
+  palette = "Greys",
+  single.colour = "black"
+)
 }
 \arguments{
 \item{model}{A boral model fitted with one or more latent variables.}

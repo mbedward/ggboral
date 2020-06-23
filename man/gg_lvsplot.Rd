@@ -4,8 +4,12 @@
 \alias{gg_lvsplot}
 \title{Plot the latent variables from a boral model}
 \usage{
-gg_lvsplot(model, scaling = 1, lvs = c(1, 2), include = c("both",
-  "objects", "attributes"))
+gg_lvsplot(
+  model,
+  scaling = 1,
+  lvs = c(1, 2),
+  include = c("both", "objects", "attributes")
+)
 }
 \arguments{
 \item{model}{A boral model fitted with one or more latent variables.}

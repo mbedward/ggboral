@@ -4,10 +4,16 @@
 \alias{gg_varpart}
 \title{Plot variance components as estimated by calc.varpart}
 \usage{
-gg_varpart(model)
+gg_varpart(model, as.percent = FALSE, label.means = FALSE)
 }
 \arguments{
 \item{model}{A boral model fitted with one or more latent variables.}
+
+\item{as.percent}{If \code{TRUE}, format variance axis tick marks and label
+as percentages. If \code{FALSE} (default), format as proportions.}
+
+\item{label.means}{If \code{TRUE}, append the mean value for each variance
+component to the legend label. Default is \code{FALSE}.}
 }
 \value{
 A ggplot object.
@@ -26,7 +32,7 @@ of variance explained by predictor variables will tend to be higher for species
 with few presences than for more common species.
 }
 \examples{
-#' library(boral)
+library(boral)
 library(ggboral)
 
 data(spider, package = "mvabund")
@@ -46,7 +52,9 @@ spiderfit_nb <- boral(y, X,
                       mcmc.control = example.control,
                       save.model = TRUE)
 
-gg_varpart(spiderfit_nb) + theme_bw()
+gg_varpart(spiderfit_nb,
+           as.percent = TRUE,
+           label.means = TRUE) + theme_bw()
 
 }
 \seealso{
